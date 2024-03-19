@@ -14,11 +14,26 @@ GPIO.setup(EN_pin,GPIO.OUT) # set enable pin as output
 app = Flask(__name__)
 
 
+# speed (turnsPerSecond) =  0.5
+def move(dir, time, speed):
+    steps = time * speed * 200
+    step_delay = time / steps
+
+    mymotortest.motor_go(dir,
+                         "Full",
+                         steps,
+                         step_delay,
+                         False,
+                         0.05)
+
+@app.route('/move/<time>/<speed>')
+def move(time, speed):
+    print("Time:", time, "Speed:", speed)
+    move(False, time, speed)
+
 @app.route('/steps/<input>')
 def set_steps(input):
     print(input)
-
-
     mymotortest.motor_go(False, # True=Clockwise, False=Counter-Clockwise
                      "Full" , # Step type (Full,Half,1/4,1/8,1/16,1/32)
                      int(input), # number of steps
