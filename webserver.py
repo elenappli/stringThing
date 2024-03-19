@@ -16,20 +16,26 @@ app = Flask(__name__)
 
 # speed (turnsPerSecond) =  0.5
 def move(dir, time, speed):
-    steps = time * speed * 200
-    step_delay = time / steps
+    steps = float(time) * float(speed) * 200
+    step_delay = float(time) / float(steps)
+    step_delay = step_delay/2 
 
+    print("steps: ", int(steps), " step_delay: ", step_delay) 
     mymotortest.motor_go(dir,
                          "Full",
-                         steps,
+                         int(steps),
                          step_delay,
                          False,
                          0.05)
 
+
+
 @app.route('/move/<time>/<speed>')
-def move(time, speed):
+def command_move(time, speed):
     print("Time:", time, "Speed:", speed)
     move(False, time, speed)
+
+    return 'Sure'
 
 @app.route('/steps/<input>')
 def set_steps(input):
